@@ -85,7 +85,7 @@ void production_rule::register_syntax(tokenizer &tokens)
 
 string production_rule::to_string(string tab)
 {
-	string result = implicant.to_string(tab) + " -> ";
+	string result = implicant.to_string(tab) + "->";
 	if (actions.size() > 0)
 		result += actions[0].to_string(tab);
 
