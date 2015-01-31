@@ -1,5 +1,5 @@
 /*
- * production_rule.h
+ * variable_name.h
  *
  *  Created on: Jan 18, 2015
  *      Author: nbingham
@@ -7,22 +7,19 @@
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
-#include "guard.h"
-#include "assignment.h"
 
-#ifndef production_rule_h
-#define production_rule_h
+#ifndef variable_name_h
+#define variable_name_h
 
-namespace prs
+namespace prs_lang
 {
-struct production_rule : parse::syntax
+struct variable_name : parse::syntax
 {
-	production_rule();
-	production_rule(configuration &config, tokenizer &tokens);
-	~production_rule();
+	variable_name();
+	variable_name(configuration &config, tokenizer &tokens);
+	~variable_name();
 
-	guard implicant;
-	vector<assignment> actions;
+	vector<string> names;
 
 	void parse(configuration &config, tokenizer &tokens);
 	static bool is_next(configuration &config, tokenizer &tokens, int i = 1);

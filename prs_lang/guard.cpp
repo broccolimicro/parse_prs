@@ -10,7 +10,7 @@
 #include "constant.h"
 #include <parse/default/symbol.h>
 
-namespace prs
+namespace prs_lang
 {
 guard::guard()
 {

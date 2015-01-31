@@ -7,7 +7,7 @@
 
 #include "production_rule_set.h"
 
-namespace prs
+namespace prs_lang
 {
 production_rule_set::production_rule_set()
 {

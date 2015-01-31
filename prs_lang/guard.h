@@ -11,7 +11,7 @@
 #ifndef guard_h
 #define guard_h
 
-namespace prs
+namespace prs_lang
 {
 struct guard : parse::syntax
 {

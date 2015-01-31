@@ -1,5 +1,5 @@
 /*
- * variable_name.h
+ * assignment.h
  *
  *  Created on: Jan 18, 2015
  *      Author: nbingham
@@ -7,19 +7,21 @@
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
+#include "variable_name.h"
 
-#ifndef variable_name_h
-#define variable_name_h
+#ifndef assignment_h
+#define assignment_h
 
-namespace prs
+namespace prs_lang
 {
-struct variable_name : parse::syntax
+struct assignment : parse::syntax
 {
-	variable_name();
-	variable_name(configuration &config, tokenizer &tokens);
-	~variable_name();
+	assignment();
+	assignment(configuration &config, tokenizer &tokens);
+	~assignment();
 
-	vector<string> names;
+	variable_name variable;
+	bool value;
 
 	void parse(configuration &config, tokenizer &tokens);
 	static bool is_next(configuration &config, tokenizer &tokens, int i = 1);

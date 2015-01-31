@@ -8,7 +8,7 @@
 #include "constant.h"
 #include <parse/default/number.h>
 
-namespace prs
+namespace prs_lang
 {
 constant::constant()
 {

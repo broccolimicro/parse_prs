@@ -9,7 +9,7 @@
 #include <parse/default/instance.h>
 #include <parse/default/symbol.h>
 
-namespace prs
+namespace prs_lang
 {
 production_rule::production_rule()
 {
