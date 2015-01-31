@@ -9,8 +9,8 @@
 #include <parse/syntax.h>
 #include "variable_name.h"
 
-#ifndef assignment_h
-#define assignment_h
+#ifndef prs_lang_assignment_h
+#define prs_lang_assignment_h
 
 namespace prs_lang
 {

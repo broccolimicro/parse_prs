@@ -10,8 +10,8 @@
 #include "guard.h"
 #include "assignment.h"
 
-#ifndef production_rule_h
-#define production_rule_h
+#ifndef prs_lang_production_rule_h
+#define prs_lang_production_rule_h
 
 namespace prs_lang
 {

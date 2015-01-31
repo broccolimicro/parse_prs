@@ -9,8 +9,8 @@
 #include <parse/syntax.h>
 #include "production_rule.h"
 
-#ifndef production_rule_set_h
-#define production_rule_set_h
+#ifndef prs_lang_production_rule_set_h
+#define prs_lang_production_rule_set_h
 
 namespace prs_lang
 {

@@ -8,8 +8,8 @@
 #include <parse/parse.h>
 #include <parse/syntax.h>
 
-#ifndef constant_h
-#define constant_h
+#ifndef prs_lang_constant_h
+#define prs_lang_constant_h
 
 namespace prs_lang
 {

@@ -8,8 +8,8 @@
 #include <parse/parse.h>
 #include <parse/syntax.h>
 
-#ifndef guard_h
-#define guard_h
+#ifndef prs_lang_guard_h
+#define prs_lang_guard_h
 
 namespace prs_lang
 {
