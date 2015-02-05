@@ -9,7 +9,7 @@
 #include <parse/default/instance.h>
 #include <parse/default/symbol.h>
 
-namespace prs_lang
+namespace parse_prs
 {
 production_rule::production_rule()
 {
@@ -35,13 +35,13 @@ void production_rule::parse(configuration &config, tokenizer &tokens)
 	tokens.expect(",");
 
 	tokens.increment(true);
-	tokens.expect<assignment>();
+	tokens.expect<parse_boolean::assignment>();
 
 	tokens.increment(true);
 	tokens.expect("->");
 
 	tokens.increment(true);
-	tokens.expect<guard>();
+	tokens.expect<parse_boolean::guard>();
 
 	if (tokens.decrement(config, __FILE__, __LINE__))
 		implicant.parse(config, tokens);
@@ -50,7 +50,7 @@ void production_rule::parse(configuration &config, tokenizer &tokens)
 		tokens.next();
 
 	if (tokens.decrement(config, __FILE__, __LINE__))
-		actions.push_back(assignment(config, tokens));
+		actions.push_back(parse_boolean::assignment(config, tokens));
 
 	while (tokens.decrement(config, __FILE__, __LINE__))
 	{
@@ -60,16 +60,16 @@ void production_rule::parse(configuration &config, tokenizer &tokens)
 		tokens.expect(",");
 
 		tokens.increment(true);
-		tokens.expect<assignment>();
+		tokens.expect<parse_boolean::assignment>();
 
 		if (tokens.decrement(config, __FILE__, __LINE__))
-			actions.push_back(assignment(config, tokens));
+			actions.push_back(parse_boolean::assignment(config, tokens));
 	}
 }
 
 bool production_rule::is_next(configuration &config, tokenizer &tokens, int i)
 {
-	return guard::is_next(config, tokens, i);
+	return parse_boolean::guard::is_next(config, tokens, i);
 }
 
 void production_rule::register_syntax(tokenizer &tokens)
@@ -78,8 +78,8 @@ void production_rule::register_syntax(tokenizer &tokens)
 	{
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
-		guard::register_syntax(tokens);
-		assignment::register_syntax(tokens);
+		parse_boolean::guard::register_syntax(tokens);
+		parse_boolean::assignment::register_syntax(tokens);
 	}
 }
 

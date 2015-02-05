@@ -9,10 +9,10 @@
 #include <parse/syntax.h>
 #include "production_rule.h"
 
-#ifndef prs_lang_production_rule_set_h
-#define prs_lang_production_rule_set_h
+#ifndef parse_prs_production_rule_set_h
+#define parse_prs_production_rule_set_h
 
-namespace prs_lang
+namespace parse_prs
 {
 struct production_rule_set : parse::syntax
 {

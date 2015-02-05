@@ -7,13 +7,13 @@
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
-#include "guard.h"
-#include "assignment.h"
+#include <parse_boolean/guard.h>
+#include <parse_boolean/assignment.h>
 
-#ifndef prs_lang_production_rule_h
-#define prs_lang_production_rule_h
+#ifndef parse_prs_production_rule_h
+#define parse_prs_production_rule_h
 
-namespace prs_lang
+namespace parse_prs
 {
 struct production_rule : parse::syntax
 {
@@ -21,8 +21,8 @@ struct production_rule : parse::syntax
 	production_rule(configuration &config, tokenizer &tokens);
 	~production_rule();
 
-	guard implicant;
-	vector<assignment> actions;
+	parse_boolean::guard implicant;
+	vector<parse_boolean::assignment> actions;
 
 	void parse(configuration &config, tokenizer &tokens);
 	static bool is_next(configuration &config, tokenizer &tokens, int i = 1);
