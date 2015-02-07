@@ -55,7 +55,7 @@ void production_rule_set::register_syntax(tokenizer &tokens)
 	}
 }
 
-string production_rule_set::to_string(string tab)
+string production_rule_set::to_string(string tab) const
 {
 	string result = "";
 
