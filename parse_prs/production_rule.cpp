@@ -16,10 +16,10 @@ production_rule::production_rule()
 	debug_name = "production_rule";
 }
 
-production_rule::production_rule(configuration &config, tokenizer &tokens)
+production_rule::production_rule(tokenizer &tokens, void *data)
 {
 	debug_name = "production_rule";
-	parse(config, tokens);
+	parse(tokens, data);
 }
 
 production_rule::~production_rule()
@@ -27,12 +27,13 @@ production_rule::~production_rule()
 
 }
 
-void production_rule::parse(configuration &config, tokenizer &tokens)
+void production_rule::parse(tokenizer &tokens, void *data)
 {
-	valid = true;
+	tokens.syntax_start(this);
 
 	tokens.increment(false);
 	tokens.expect(",");
+	tokens.expect(":");
 
 	tokens.increment(true);
 	tokens.expect<parse_boolean::assignment>();
@@ -43,33 +44,45 @@ void production_rule::parse(configuration &config, tokenizer &tokens)
 	tokens.increment(true);
 	tokens.expect<parse_boolean::guard>();
 
-	if (tokens.decrement(config, __FILE__, __LINE__))
-		implicant.parse(config, tokens);
+	if (tokens.decrement(__FILE__, __LINE__, data))
+		implicant.parse(tokens, 0, data);
 
-	if (tokens.decrement(config, __FILE__, __LINE__))
+	if (tokens.decrement(__FILE__, __LINE__, data))
 		tokens.next();
 
-	if (tokens.decrement(config, __FILE__, __LINE__))
-		actions.push_back(parse_boolean::assignment(config, tokens));
-
-	while (tokens.decrement(config, __FILE__, __LINE__))
+	if (tokens.decrement(__FILE__, __LINE__, data))
 	{
-		tokens.next();
+		if (actions.size() == 0)
+			actions.push_back(vector<parse_boolean::assignment>());
+		actions.back().push_back(parse_boolean::assignment(tokens, data));
+	}
+
+	while (tokens.decrement(__FILE__, __LINE__, data))
+	{
+		if (tokens.next() == ":")
+			actions.push_back(vector<parse_boolean::assignment>());
 
 		tokens.increment(false);
 		tokens.expect(",");
+		tokens.expect(":");
 
 		tokens.increment(true);
 		tokens.expect<parse_boolean::assignment>();
 
-		if (tokens.decrement(config, __FILE__, __LINE__))
-			actions.push_back(parse_boolean::assignment(config, tokens));
+		if (tokens.decrement(__FILE__, __LINE__, data))
+		{
+			if (actions.size() == 0)
+				actions.push_back(vector<parse_boolean::assignment>());
+			actions.back().push_back(parse_boolean::assignment(tokens, data));
+		}
 	}
+
+	tokens.syntax_end(this);
 }
 
-bool production_rule::is_next(configuration &config, tokenizer &tokens, int i)
+bool production_rule::is_next(tokenizer &tokens, int i, void *data)
 {
-	return parse_boolean::guard::is_next(config, tokens, i);
+	return parse_boolean::guard::is_next(tokens, i, data);
 }
 
 void production_rule::register_syntax(tokenizer &tokens)
@@ -86,12 +99,19 @@ void production_rule::register_syntax(tokenizer &tokens)
 string production_rule::to_string(string tab) const
 {
 	string result = implicant.to_string(tab) + "->";
-	if (actions.size() > 0)
-		result += actions[0].to_string(tab);
+	for (int i = 0; i < (int)actions.size(); i++)
+	{
+		if (i != 0)
+			result += ":";
 
-	for (int i = 1; i < (int)actions.size(); i++)
-		result += "," + actions[i].to_string(tab);
+		for (int j = 0; j < (int)actions[i].size(); j++)
+		{
+			if (j != 0)
+				result += ",";
 
+			result += actions[i][j].to_string(tab);
+		}
+	}
 	return result;
 }
 }

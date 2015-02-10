@@ -17,13 +17,13 @@ namespace parse_prs
 struct production_rule_set : parse::syntax
 {
 	production_rule_set();
-	production_rule_set(configuration &config, tokenizer &tokens);
+	production_rule_set(tokenizer &tokens, void *data = NULL);
 	~production_rule_set();
 
-	vector<production_rule> prs;
+	vector<production_rule> rules;
 
-	void parse(configuration &config, tokenizer &tokens);
-	static bool is_next(configuration &config, tokenizer &tokens, int i = 1);
+	void parse(tokenizer &tokens, void *data = NULL);
+	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
 	static void register_syntax(tokenizer &tokens);
 
 	string to_string(string tab = "") const;

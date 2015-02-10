@@ -18,14 +18,14 @@ namespace parse_prs
 struct production_rule : parse::syntax
 {
 	production_rule();
-	production_rule(configuration &config, tokenizer &tokens);
+	production_rule(tokenizer &tokens, void *data = NULL);
 	~production_rule();
 
 	parse_boolean::guard implicant;
-	vector<parse_boolean::assignment> actions;
+	vector<vector<parse_boolean::assignment> > actions;
 
-	void parse(configuration &config, tokenizer &tokens);
-	static bool is_next(configuration &config, tokenizer &tokens, int i = 1);
+	void parse(tokenizer &tokens, void *data = NULL);
+	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
 	static void register_syntax(tokenizer &tokens);
 
 	string to_string(string tab = "") const;

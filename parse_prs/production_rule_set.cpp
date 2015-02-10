@@ -14,10 +14,10 @@ production_rule_set::production_rule_set()
 	debug_name = "production_rule_set";
 }
 
-production_rule_set::production_rule_set(configuration &config, tokenizer &tokens)
+production_rule_set::production_rule_set(tokenizer &tokens, void *data)
 {
 	debug_name = "production_rule_set";
-	parse(config, tokens);
+	parse(tokens, data);
 }
 
 production_rule_set::~production_rule_set()
@@ -25,25 +25,27 @@ production_rule_set::~production_rule_set()
 
 }
 
-void production_rule_set::parse(configuration &config, tokenizer &tokens)
+void production_rule_set::parse(tokenizer &tokens, void *data)
 {
-	valid = true;
+	tokens.syntax_start(this);
 
 	tokens.increment(false);
 	tokens.expect<production_rule>();
 
-	while (tokens.decrement(config, __FILE__, __LINE__))
+	while (tokens.decrement(__FILE__, __LINE__, data))
 	{
-		prs.push_back(production_rule(config, tokens));
+		rules.push_back(production_rule(tokens, data));
 
 		tokens.increment(false);
 		tokens.expect<production_rule>();
 	}
+
+	tokens.syntax_end(this);
 }
 
-bool production_rule_set::is_next(configuration &config, tokenizer &tokens, int i)
+bool production_rule_set::is_next(tokenizer &tokens, int i, void *data)
 {
-	return production_rule::is_next(config, tokens, i);
+	return production_rule::is_next(tokens, i, data);
 }
 
 void production_rule_set::register_syntax(tokenizer &tokens)
@@ -59,8 +61,8 @@ string production_rule_set::to_string(string tab) const
 {
 	string result = "";
 
-	for (int i = 0; i < (int)prs.size(); i++)
-		result += tab + prs[i].to_string(tab) + "\n";
+	for (int i = 0; i < (int)rules.size(); i++)
+		result += tab + rules[i].to_string(tab) + "\n";
 
 	return result;
 }
