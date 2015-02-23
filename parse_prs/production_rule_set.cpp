@@ -66,4 +66,10 @@ string production_rule_set::to_string(string tab) const
 
 	return result;
 }
+
+parse::syntax *production_rule_set::clone() const
+{
+	return new production_rule_set(*this);
+}
+
 }
