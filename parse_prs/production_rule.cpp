@@ -32,13 +32,13 @@ void production_rule::parse(tokenizer &tokens, void *data)
 	tokens.syntax_start(this);
 
 	tokens.increment(true);
-	tokens.expect<parse_boolean::internal_choice>();
+	tokens.expect<parse_boolean::assignment>();
 
 	tokens.increment(true);
 	tokens.expect("->");
 
 	tokens.increment(true);
-	tokens.expect<parse_boolean::disjunction>();
+	tokens.expect<parse_boolean::guard>();
 
 	if (tokens.decrement(__FILE__, __LINE__, data))
 		implicant.parse(tokens, data);
@@ -54,7 +54,7 @@ void production_rule::parse(tokenizer &tokens, void *data)
 
 bool production_rule::is_next(tokenizer &tokens, int i, void *data)
 {
-	return parse_boolean::disjunction::is_next(tokens, i, data);
+	return parse_boolean::guard::is_next(tokens, i, data);
 }
 
 void production_rule::register_syntax(tokenizer &tokens)
@@ -63,8 +63,8 @@ void production_rule::register_syntax(tokenizer &tokens)
 	{
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
-		parse_boolean::disjunction::register_syntax(tokens);
-		parse_boolean::internal_choice::register_syntax(tokens);
+		parse_boolean::guard::register_syntax(tokens);
+		parse_boolean::assignment::register_syntax(tokens);
 	}
 }
 
