@@ -20,7 +20,9 @@ struct production_rule_set : parse::syntax
 	production_rule_set(tokenizer &tokens, void *data = NULL);
 	~production_rule_set();
 
+	vector<production_rule_set> regions;
 	vector<production_rule> rules;
+	string region;
 
 	void parse(tokenizer &tokens, void *data = NULL);
 	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
