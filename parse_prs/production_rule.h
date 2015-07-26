@@ -7,8 +7,8 @@
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
-#include <parse_boolean/guard.h>
-#include <parse_boolean/assignment.h>
+#include <parse_expression/expression.h>
+#include <parse_expression/composition.h>
 
 #ifndef parse_prs_production_rule_h
 #define parse_prs_production_rule_h
@@ -21,8 +21,8 @@ struct production_rule : parse::syntax
 	production_rule(tokenizer &tokens, void *data = NULL);
 	~production_rule();
 
-	parse_boolean::guard implicant;
-	parse_boolean::assignment action;
+	parse_expression::expression implicant;
+	parse_expression::composition action;
 
 	void parse(tokenizer &tokens, void *data = NULL);
 	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
