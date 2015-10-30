@@ -8,6 +8,7 @@
 #include "production_rule_set.h"
 #include <parse/default/number.h>
 #include <parse/default/symbol.h>
+#include <parse/default/new_line.h>
 
 namespace parse_prs
 {
@@ -93,6 +94,7 @@ void production_rule_set::register_syntax(tokenizer &tokens)
 		tokens.register_syntax<production_rule_set>();
 		tokens.register_token<parse::number>();
 		tokens.register_token<parse::symbol>();
+		tokens.register_token<parse::new_line>(false);
 		production_rule::register_syntax(tokens);
 	}
 }

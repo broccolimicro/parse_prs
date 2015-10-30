@@ -8,6 +8,7 @@
 #include "production_rule.h"
 #include <parse/default/instance.h>
 #include <parse/default/symbol.h>
+#include <parse/default/white_space.h>
 
 namespace parse_prs
 {
@@ -63,6 +64,7 @@ void production_rule::register_syntax(tokenizer &tokens)
 	{
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
+		tokens.register_token<parse::white_space>(false);
 		parse_expression::expression::register_syntax(tokens);
 		parse_expression::composition::register_syntax(tokens);
 	}
