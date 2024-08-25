@@ -21,6 +21,7 @@ struct production_rule : parse::syntax
 	production_rule(tokenizer &tokens, void *data = NULL);
 	~production_rule();
 
+	parse_expression::expression assume;
 	parse_expression::expression implicant;
 	parse_expression::composition action;
 

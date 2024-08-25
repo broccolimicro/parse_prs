@@ -32,6 +32,9 @@ void production_rule::parse(tokenizer &tokens, void *data)
 {
 	tokens.syntax_start(this);
 
+	tokens.increment(false);
+	tokens.expect("{");
+
 	tokens.increment(true);
 	tokens.expect<parse_expression::composition>();
 
@@ -49,6 +52,24 @@ void production_rule::parse(tokenizer &tokens, void *data)
 
 	if (tokens.decrement(__FILE__, __LINE__, data))
 		action.parse(tokens, data);
+
+	if (tokens.decrement(__FILE__, __LINE__, data)) {
+		tokens.next();
+
+		tokens.increment(true);
+		tokens.expect("}");
+
+		tokens.increment(true);
+		tokens.expect<parse_expression::expression>();
+
+		if (tokens.decrement(__FILE__, __LINE__, data)) {
+			assume.parse(tokens, data);
+		}
+
+		if (tokens.decrement(__FILE__, __LINE__, data)) {
+			tokens.next();
+		}
+	}
 
 	tokens.syntax_end(this);
 }
@@ -72,7 +93,11 @@ void production_rule::register_syntax(tokenizer &tokens)
 
 string production_rule::to_string(string tab) const
 {
-	return implicant.to_string(tab) + "->" + action.to_string(tab);
+	string result = implicant.to_string(tab) + "->" + action.to_string(tab);
+	if (assume.valid) {
+		result += " {" + assume.to_string(tab) + "}";
+	}
+	return result;
 }
 
 parse::syntax *production_rule::clone() const
