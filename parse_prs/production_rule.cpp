@@ -36,22 +36,25 @@ void production_rule::parse(tokenizer &tokens, void *data)
 	tokens.expect("{");
 
 	tokens.increment(true);
-	tokens.expect<parse_expression::composition>();
+	tokens.expect<parse_expression::assignment>();
 
 	tokens.increment(true);
 	tokens.expect("->");
 
 	tokens.increment(true);
-	tokens.expect<parse_expression::expression>();
+	tokens.expect<parse_prs::guard>();
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
-		implicant.parse(tokens, data);
+	if (tokens.decrement(__FILE__, __LINE__, data)) {
+		implicant.parse(tokens, guard::OR, true, data);
+	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__, data)) {
 		tokens.next();
+	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__, data)) {
 		action.parse(tokens, data);
+	}
 
 	if (tokens.decrement(__FILE__, __LINE__, data)) {
 		tokens.next();
@@ -76,7 +79,7 @@ void production_rule::parse(tokenizer &tokens, void *data)
 
 bool production_rule::is_next(tokenizer &tokens, int i, void *data)
 {
-	return parse_expression::expression::is_next(tokens, i, data);
+	return parse_prs::guard::is_next(tokens, i, data);
 }
 
 void production_rule::register_syntax(tokenizer &tokens)
@@ -86,8 +89,9 @@ void production_rule::register_syntax(tokenizer &tokens)
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
 		tokens.register_token<parse::white_space>(false);
+		guard::register_syntax(tokens);
 		parse_expression::expression::register_syntax(tokens);
-		parse_expression::composition::register_syntax(tokens);
+		parse_expression::assignment::register_syntax(tokens);
 	}
 }
 

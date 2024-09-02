@@ -1,17 +1,11 @@
-/*
- * production_rule.h
- *
- *  Created on: Jan 18, 2015
- *      Author: nbingham
- */
+#pragma once
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
 #include <parse_expression/expression.h>
-#include <parse_expression/composition.h>
+#include <parse_expression/assignment.h>
 
-#ifndef parse_prs_production_rule_h
-#define parse_prs_production_rule_h
+#include "guard.h"
 
 namespace parse_prs
 {
@@ -22,8 +16,8 @@ struct production_rule : parse::syntax
 	~production_rule();
 
 	parse_expression::expression assume;
-	parse_expression::expression implicant;
-	parse_expression::composition action;
+	guard implicant;
+	parse_expression::assignment action;
 
 	void parse(tokenizer &tokens, void *data = NULL);
 	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
@@ -34,4 +28,3 @@ struct production_rule : parse::syntax
 };
 }
 
-#endif
