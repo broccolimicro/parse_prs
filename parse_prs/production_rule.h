@@ -18,6 +18,10 @@ struct production_rule : parse::syntax
 	parse_expression::expression assume;
 	guard implicant;
 	parse_expression::assignment action;
+	bool weak;
+	bool pass;
+	bool keep;
+	uint64_t after;
 
 	void parse(tokenizer &tokens, void *data = NULL);
 	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);

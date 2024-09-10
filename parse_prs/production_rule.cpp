@@ -7,19 +7,33 @@
 
 #include "production_rule.h"
 #include <parse/default/instance.h>
+#include <parse/default/number.h>
 #include <parse/default/symbol.h>
 #include <parse/default/white_space.h>
+
+#include <string>
+#include <limits>
+
+using namespace std;
 
 namespace parse_prs
 {
 production_rule::production_rule()
 {
 	debug_name = "production_rule";
+	weak = false;
+	pass = false;
+	keep = true;
+	after = std::numeric_limits<uint64_t>::max();
 }
 
 production_rule::production_rule(tokenizer &tokens, void *data)
 {
 	debug_name = "production_rule";
+	weak = false;
+	pass = false;
+	keep = true;
+	after = std::numeric_limits<uint64_t>::max();
 	parse(tokens, data);
 }
 
@@ -30,7 +44,15 @@ production_rule::~production_rule()
 
 void production_rule::parse(tokenizer &tokens, void *data)
 {
+	weak = false;
+	pass = false;
+	keep = true;
+	after = std::numeric_limits<uint64_t>::max();
+
 	tokens.syntax_start(this);
+
+	tokens.increment(false);
+	tokens.expect("[");
 
 	tokens.increment(false);
 	tokens.expect("{");
@@ -74,6 +96,57 @@ void production_rule::parse(tokenizer &tokens, void *data)
 		}
 	}
 
+	if (tokens.decrement(__FILE__, __LINE__, data)) {
+		tokens.next();
+
+		tokens.increment(true);
+		tokens.expect("]");
+
+		bool first = true;
+		do {
+			if (first) {
+				first = false;
+			} else {
+				tokens.next();
+			}
+
+			tokens.increment(false);
+			tokens.expect(",");
+
+			tokens.increment(true);
+			tokens.expect("float");
+			tokens.expect("weak");
+			tokens.expect("pass");
+			tokens.expect("after");
+
+			if (tokens.decrement(__FILE__, __LINE__, data)) {
+				string value = tokens.next();
+				if (value == "float") {
+					keep = false;
+				}	else if (value == "weak") {
+					weak = true;
+				} else if (value == "pass") {
+					pass = true;
+				} else if (value == "after") {
+					tokens.increment(true);
+					tokens.expect<parse::number>();
+					tokens.increment(true);
+					tokens.expect("=");
+					if (tokens.decrement(__FILE__, __LINE__, data)) {
+						tokens.next();
+					}
+					if (tokens.decrement(__FILE__, __LINE__, data)) {
+						after = stoull(tokens.next());
+					}
+				}
+			}
+		} while (tokens.decrement(__FILE__, __LINE__, data));
+
+		if (tokens.decrement(__FILE__, __LINE__, data)) {
+			tokens.next();
+		}
+	}
+
 	tokens.syntax_end(this);
 }
 
@@ -88,6 +161,7 @@ void production_rule::register_syntax(tokenizer &tokens)
 	{
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
+		tokens.register_token<parse::number>();
 		tokens.register_token<parse::white_space>(false);
 		guard::register_syntax(tokens);
 		parse_expression::expression::register_syntax(tokens);
@@ -101,6 +175,40 @@ string production_rule::to_string(string tab) const
 	if (assume.valid) {
 		result += " {" + assume.to_string(tab) + "}";
 	}
+
+	if (not keep or weak or pass) {
+		bool comma=true;
+		result += " [";
+		if (not keep) {
+			result += "float";
+			comma=false;
+		}
+		if (weak) {
+			if (not comma) {
+				result += ",";
+			}
+			result += "weak";
+			comma=false;
+		}
+		if (pass) {
+			if (not comma) {
+				result += ",";
+			}
+			result += "pass";
+			comma=false;
+		}
+		if (after != std::numeric_limits<uint64_t>::max()) {
+			if (not comma) {
+				result += ",";
+			}
+			result += "after=";
+			result += ::to_string(after);
+			comma=false;
+		}
+
+		result += "]";
+	}
+
 	return result;
 }
 
