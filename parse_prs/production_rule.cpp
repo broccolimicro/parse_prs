@@ -23,7 +23,7 @@ production_rule::production_rule()
 	debug_name = "production_rule";
 	weak = false;
 	pass = false;
-	keep = true;
+	keep = false;
 	after = std::numeric_limits<uint64_t>::max();
 }
 
@@ -32,7 +32,7 @@ production_rule::production_rule(tokenizer &tokens, void *data)
 	debug_name = "production_rule";
 	weak = false;
 	pass = false;
-	keep = true;
+	keep = false;
 	after = std::numeric_limits<uint64_t>::max();
 	parse(tokens, data);
 }
@@ -46,7 +46,7 @@ void production_rule::parse(tokenizer &tokens, void *data)
 {
 	weak = false;
 	pass = false;
-	keep = true;
+	keep = false;
 	after = std::numeric_limits<uint64_t>::max();
 
 	tokens.syntax_start(this);
@@ -114,15 +114,15 @@ void production_rule::parse(tokenizer &tokens, void *data)
 			tokens.expect(",");
 
 			tokens.increment(true);
-			tokens.expect("float");
+			tokens.expect("keep");
 			tokens.expect("weak");
 			tokens.expect("pass");
 			tokens.expect("after");
 
 			if (tokens.decrement(__FILE__, __LINE__, data)) {
 				string value = tokens.next();
-				if (value == "float") {
-					keep = false;
+				if (value == "keep") {
+					keep = true;
 				}	else if (value == "weak") {
 					weak = true;
 				} else if (value == "pass") {
@@ -176,11 +176,11 @@ string production_rule::to_string(string tab) const
 		result += " {" + assume.to_string(tab) + "}";
 	}
 
-	if (not keep or weak or pass) {
+	if (keep or weak or pass) {
 		bool comma=true;
 		result += " [";
-		if (not keep) {
-			result += "float";
+		if (keep) {
+			result += "keep";
 			comma=false;
 		}
 		if (weak) {
