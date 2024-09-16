@@ -176,7 +176,7 @@ string production_rule::to_string(string tab) const
 		result += " {" + assume.to_string(tab) + "}";
 	}
 
-	if (keep or weak or pass) {
+	if (keep or weak or pass or after != std::numeric_limits<uint64_t>::max()) {
 		bool comma=true;
 		result += " [";
 		if (keep) {

@@ -119,29 +119,17 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 					tokens.expect<parse::number>();
 
 					if (tokens.decrement(__FILE__, __LINE__, data)) {
-						terms.back().width = tokens.next();
+						terms.back().size = tokens.next();
 					}
 
 					if (tokens.decrement(__FILE__, __LINE__, data)) {
 						tokens.next();
 
-						tokens.increment(false);
-						tokens.expect(",");
-
 						tokens.increment(true);
-						tokens.expect<parse::number>();
+						tokens.expect<parse::instance>();
 
 						if (tokens.decrement(__FILE__, __LINE__, data)) {
-							terms.back().length = tokens.next();
-						}
-
-						if (tokens.decrement(__FILE__, __LINE__, data)) {
-							tokens.increment(true);
-							tokens.expect<parse::instance>();
-
-							if (tokens.decrement(__FILE__, __LINE__, data)) {
-								terms.back().variant = tokens.next();
-							}
+							terms.back().variant = tokens.next();
 						}
 					}
 
@@ -272,13 +260,10 @@ string term::to_string(string tab) const
 		result += ltrl.to_string(tab);
 	}
 
-	if (width != "") {
-		result += "<" + width;
-		if (length != "") {
-			result += "," + length;
-			if (variant != "") {
-				result += "," + variant;
-			}
+	if (size != "") {
+		result += "<" + size;
+		if (variant != "") {
+			result += "," + variant;
 		}
 		result += ">";
 	}

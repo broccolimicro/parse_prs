@@ -45,8 +45,7 @@ struct term {
 	guard sub;
 	literal ltrl;
 
-	string width;
-	string length;
+	string size;
 	string variant;
 
 	guard pchg;
