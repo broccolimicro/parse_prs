@@ -19,6 +19,7 @@ struct production_rule : parse::syntax
 	guard implicant;
 	parse_expression::assignment action;
 	bool weak;
+	bool force;
 	bool pass;
 	bool keep;
 	uint64_t after;
