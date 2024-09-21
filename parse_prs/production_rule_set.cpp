@@ -36,6 +36,50 @@ void production_rule_set::parse(tokenizer &tokens, void *data)
 	tokens.expect("{");
 	tokens.expect<production_rule>();
 
+	const int REQUIRE = 0;
+	const int ASSUME = 1;
+
+	bool found = true;
+	while (found) {
+		found = false;
+		tokens.increment(false);
+		tokens.expect("require");
+		tokens.expect("assume");
+
+		int constraint = -1;
+		while (tokens.decrement(__FILE__, __LINE__, data)) {
+			found = true;
+			string value = tokens.next();
+			if (constraint < 0 and value == "require") {
+				constraint = REQUIRE;
+			} else if (constraint < 0 and value == "assume") {
+				constraint = ASSUME;
+			}
+
+			tokens.increment(false);
+			tokens.expect(",");
+
+			tokens.increment(true);
+			if (constraint == REQUIRE) {
+				tokens.expect("driven");
+				tokens.expect("stable");
+				tokens.expect("noninterfering");
+				tokens.expect("adiabatic");
+			} else if (constraint == ASSUME) {
+				tokens.expect("nobackflow");
+				tokens.expect("static");
+			}
+
+			if (tokens.decrement(__FILE__, __LINE__, data)) {
+				if (constraint == REQUIRE) {
+					require.push_back(tokens.next());
+				} else if (constraint == ASSUME) {
+					assume.push_back(tokens.next());
+				}
+			}
+		}
+	}
+
 	while (tokens.decrement(__FILE__, __LINE__, data))
 	{
 		if (tokens.found("{"))
@@ -102,6 +146,28 @@ void production_rule_set::register_syntax(tokenizer &tokens)
 string production_rule_set::to_string(string tab) const
 {
 	string result = "";
+
+	if (not assume.empty()) {
+		result += "assume ";
+		for (auto i = assume.begin(); i != assume.end(); i++) {
+			if (i != assume.begin()) {
+				result += ", ";
+			}
+			result += *i;
+		}
+		result += "\n";
+	}
+
+	if (not require.empty()) {
+		result += "require ";
+		for (auto i = require.begin(); i != require.end(); i++) {
+			if (i != require.begin()) {
+				result += ", ";
+			}
+			result += *i;
+		}
+		result += "\n";
+	}
 
 	for (int i = 0; i < (int)regions.size(); i++)
 		result += tab + regions[i].to_string(tab) + "\n";

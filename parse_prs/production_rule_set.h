@@ -24,6 +24,9 @@ struct production_rule_set : parse::syntax
 	vector<production_rule> rules;
 	string region;
 
+	vector<string> assume;
+	vector<string> require;
+
 	void parse(tokenizer &tokens, void *data = NULL);
 	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
 	static void register_syntax(tokenizer &tokens);
