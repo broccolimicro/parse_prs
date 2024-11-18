@@ -23,7 +23,7 @@ struct guard : parse::syntax
 		OR = 1
 	};
 
-	vector<term> terms;
+	list<term> terms;
 	
 	string region;
 	int level;

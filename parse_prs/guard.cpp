@@ -208,19 +208,19 @@ void guard::register_syntax(tokenizer &tokens)
 string guard::to_string(string tab) const
 {
 	string result;
-	for (int i = 0; i < (int)terms.size(); i++) {
-		if (i != 0) {
+	for (auto term = terms.begin(); term != terms.end(); term++) {
+		if (term != terms.begin()) {
 			if (level == OR) {
 				result += "|";
 			} else {
 				result += "&";
-				if (terms[i].pchg.valid) {
-					result += "{" + terms[i].pchg.to_string(tab) + "}";
+				if (term->pchg.valid) {
+					result += "{" + term->pchg.to_string(tab) + "}";
 				}
 			}
 		}
 
-		result += terms[i].to_string(tab);
+		result += term->to_string(tab);
 	}
 	return result;
 }
