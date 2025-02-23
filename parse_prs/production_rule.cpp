@@ -10,6 +10,7 @@
 #include <parse/default/number.h>
 #include <parse/default/symbol.h>
 #include <parse/default/white_space.h>
+#include <parse/default/new_line.h>
 
 #include <string>
 #include <limits>
@@ -53,6 +54,9 @@ void production_rule::parse(tokenizer &tokens, void *data)
 	after = std::numeric_limits<uint64_t>::max();
 
 	tokens.syntax_start(this);
+
+	tokens.increment(true);
+	tokens.expect<parse::new_line>();
 
 	tokens.increment(false);
 	tokens.expect("[");
@@ -153,6 +157,10 @@ void production_rule::parse(tokenizer &tokens, void *data)
 		}
 	}
 
+	if (tokens.decrement(__FILE__, __LINE__, data)) {
+		tokens.next();
+	}
+
 	tokens.syntax_end(this);
 }
 
@@ -169,6 +177,7 @@ void production_rule::register_syntax(tokenizer &tokens)
 		tokens.register_token<parse::symbol>();
 		tokens.register_token<parse::number>();
 		tokens.register_token<parse::white_space>(false);
+		tokens.register_token<parse::new_line>(true);
 		guard::register_syntax(tokens);
 		parse_expression::expression::register_syntax(tokens);
 		parse_expression::assignment::register_syntax(tokens);

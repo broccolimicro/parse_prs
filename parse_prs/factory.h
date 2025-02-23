@@ -1,22 +1,13 @@
-/*
- * factory.h
- *
- *  Created on: Aug 16, 2015
- *      Author: nbingham
- */
+#pragma once
 
-#include "production_rule_set.h"
-#include "production_rule.h"
-
-#ifndef factory_h
-#define factory_h
+#include <parse/parse.h>
+#include <parse/syntax.h>
 
 namespace parse_prs
 {
-	parse::syntax *factory(tokenizer &tokens, void *data)
-	{
-		return new production_rule_set(tokens, data);
-	};
-}
 
-#endif
+parse::syntax *produce(tokenizer &tokens, void *data=nullptr);
+void expect(tokenizer &tokens);
+void register_syntax(tokenizer &tokens);
+
+}

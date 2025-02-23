@@ -35,6 +35,7 @@ void production_rule_set::parse(tokenizer &tokens, void *data)
 	tokens.increment(false);
 	tokens.expect("{");
 	tokens.expect<production_rule>();
+	tokens.expect<parse::new_line>();
 
 	const int REQUIRE = 0;
 	const int ASSUME = 1;
@@ -82,8 +83,7 @@ void production_rule_set::parse(tokenizer &tokens, void *data)
 
 	while (tokens.decrement(__FILE__, __LINE__, data))
 	{
-		if (tokens.found("{"))
-		{
+		if (tokens.found("{")) {
 			tokens.next();
 
 			tokens.increment(true);
@@ -114,13 +114,16 @@ void production_rule_set::parse(tokenizer &tokens, void *data)
 			if (tokens.decrement(__FILE__, __LINE__, data) && regionadded)
 				regions.back().region = tokens.next();
 
-		}
-		else
+		} else if (tokens.found<parse::new_line>()) {
+			tokens.next();
+		} else {
 			rules.push_back(production_rule(tokens, data));
+		}
 
 		tokens.increment(false);
 		tokens.expect("{");
 		tokens.expect<production_rule>();
+		tokens.expect<parse::new_line>();
 	}
 
 	tokens.syntax_end(this);
@@ -128,6 +131,10 @@ void production_rule_set::parse(tokenizer &tokens, void *data)
 
 bool production_rule_set::is_next(tokenizer &tokens, int i, void *data)
 {
+	while (tokens.is_next<parse::new_line>(i)) {
+		i++;
+	}
+
 	return production_rule::is_next(tokens, i, data) || tokens.is_next("{");
 }
 
@@ -138,7 +145,7 @@ void production_rule_set::register_syntax(tokenizer &tokens)
 		tokens.register_syntax<production_rule_set>();
 		tokens.register_token<parse::number>();
 		tokens.register_token<parse::symbol>();
-		tokens.register_token<parse::new_line>(false);
+		tokens.register_token<parse::new_line>(true);
 		production_rule::register_syntax(tokens);
 	}
 }
