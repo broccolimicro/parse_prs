@@ -46,37 +46,55 @@ void production_rule_set::parse(tokenizer &tokens, void *data)
 		tokens.increment(false);
 		tokens.expect("require");
 		tokens.expect("assume");
+		tokens.expect<parse::new_line>();
 
 		int constraint = -1;
-		while (tokens.decrement(__FILE__, __LINE__, data)) {
+		if (tokens.decrement(__FILE__, __LINE__, data)) {
 			found = true;
 			string value = tokens.next();
-			if (constraint < 0 and value == "require") {
+			if (value == "require") {
 				constraint = REQUIRE;
-			} else if (constraint < 0 and value == "assume") {
+			} else if (value == "assume") {
 				constraint = ASSUME;
+			} else {
+				continue;
 			}
-
-			tokens.increment(false);
-			tokens.expect(",");
 
 			tokens.increment(true);
-			if (constraint == REQUIRE) {
-				tokens.expect("driven");
-				tokens.expect("stable");
-				tokens.expect("noninterfering");
-				tokens.expect("adiabatic");
-			} else if (constraint == ASSUME) {
-				tokens.expect("nobackflow");
-				tokens.expect("static");
-			}
+			tokens.expect<parse::new_line>();
 
-			if (tokens.decrement(__FILE__, __LINE__, data)) {
-				if (constraint == REQUIRE) {
-					require.push_back(tokens.next());
-				} else if (constraint == ASSUME) {
-					assume.push_back(tokens.next());
+			bool first = true;
+			do {
+				if (not first) {
+					tokens.next();
 				}
+				first = false;
+
+				tokens.increment(false);
+				tokens.expect(",");
+
+				tokens.increment(true);
+				if (constraint == REQUIRE) {
+					tokens.expect("driven");
+					tokens.expect("stable");
+					tokens.expect("noninterfering");
+					tokens.expect("adiabatic");
+				} else if (constraint == ASSUME) {
+					tokens.expect("nobackflow");
+					tokens.expect("static");
+				}
+
+				if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (constraint == REQUIRE) {
+						require.push_back(tokens.next());
+					} else if (constraint == ASSUME) {
+						assume.push_back(tokens.next());
+					}
+				}
+			} while (tokens.decrement(__FILE__, __LINE__, data));
+			
+			if (tokens.decrement(__FILE__, __LINE__, data)) {
+				tokens.next();
 			}
 		}
 	}
