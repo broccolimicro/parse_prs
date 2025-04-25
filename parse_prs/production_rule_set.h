@@ -1,16 +1,8 @@
-/*
- * production_rule_set.h
- *
- *  Created on: Jan 18, 2015
- *      Author: nbingham
- */
+#pragma once
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
 #include "production_rule.h"
-
-#ifndef parse_prs_production_rule_set_h
-#define parse_prs_production_rule_set_h
 
 namespace parse_prs
 {
@@ -36,4 +28,3 @@ struct production_rule_set : parse::syntax
 };
 }
 
-#endif
