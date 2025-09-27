@@ -14,12 +14,12 @@ namespace parse_prs
 {
 production_rule_set::production_rule_set()
 {
-	debug_name = "production_rule_set";
+	debug_name = "prs_production_rule_set";
 }
 
 production_rule_set::production_rule_set(tokenizer &tokens, void *data)
 {
-	debug_name = "production_rule_set";
+	debug_name = "prs_production_rule_set";
 	parse(tokens, data);
 }
 

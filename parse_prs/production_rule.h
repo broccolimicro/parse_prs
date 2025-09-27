@@ -2,10 +2,9 @@
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
-#include <parse_expression/expression.h>
-#include <parse_expression/assignment.h>
 
 #include "guard.h"
+#include "expression.h"
 
 namespace parse_prs
 {
@@ -15,9 +14,9 @@ struct production_rule : parse::syntax
 	production_rule(tokenizer &tokens, void *data = NULL);
 	~production_rule();
 
-	parse_expression::expression assume;
+	expression assume;
 	guard implicant;
-	parse_expression::assignment action;
+	assignment action;
 	bool weak;
 	bool force;
 	bool pass;

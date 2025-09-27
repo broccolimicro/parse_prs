@@ -1,10 +1,3 @@
-/*
- * production_rule.cpp
- *
- *  Created on: Jan 18, 2015
- *      Author: nbingham
- */
-
 #include "production_rule.h"
 #include <parse/default/instance.h>
 #include <parse/default/number.h>
@@ -19,9 +12,10 @@ using namespace std;
 
 namespace parse_prs
 {
+
 production_rule::production_rule()
 {
-	debug_name = "production_rule";
+	debug_name = "prs_production_rule";
 	weak = false;
 	force = false;
 	pass = false;
@@ -31,7 +25,7 @@ production_rule::production_rule()
 
 production_rule::production_rule(tokenizer &tokens, void *data)
 {
-	debug_name = "production_rule";
+	debug_name = "prs_production_rule";
 	weak = false;
 	force = false;
 	pass = false;
@@ -65,7 +59,7 @@ void production_rule::parse(tokenizer &tokens, void *data)
 	tokens.expect("{");
 
 	tokens.increment(true);
-	tokens.expect<parse_expression::assignment>();
+	tokens.expect<assignment>();
 
 	tokens.increment(true);
 	tokens.expect("->");
@@ -92,7 +86,7 @@ void production_rule::parse(tokenizer &tokens, void *data)
 		tokens.expect("}");
 
 		tokens.increment(true);
-		tokens.expect<parse_expression::expression>();
+		tokens.expect<expression>();
 
 		if (tokens.decrement(__FILE__, __LINE__, data)) {
 			assume.parse(tokens, data);
@@ -169,18 +163,17 @@ bool production_rule::is_next(tokenizer &tokens, int i, void *data)
 	return parse_prs::guard::is_next(tokens, i, data);
 }
 
-void production_rule::register_syntax(tokenizer &tokens)
-{
-	if (!tokens.syntax_registered<production_rule>())
-	{
+void production_rule::register_syntax(tokenizer &tokens) {
+	if (!tokens.syntax_registered<production_rule>()) {
+		setup_expressions();
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
 		tokens.register_token<parse::number>();
 		tokens.register_token<parse::white_space>(false);
 		tokens.register_token<parse::new_line>(true);
 		guard::register_syntax(tokens);
-		parse_expression::expression::register_syntax(tokens);
-		parse_expression::assignment::register_syntax(tokens);
+		expression::register_syntax(tokens);
+		assignment::register_syntax(tokens);
 	}
 }
 

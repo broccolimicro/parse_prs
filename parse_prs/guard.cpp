@@ -15,13 +15,13 @@ namespace parse_prs
 {
 guard::guard()
 {
-	debug_name = "guard";
+	debug_name = "prs_guard";
 	this->level = OR;
 }
 
 guard::guard(tokenizer &tokens, int level, bool source, void *data)
 {
-	debug_name = "guard";
+	debug_name = "prs_guard";
 	parse(tokens, level, source, data);
 }
 

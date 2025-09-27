@@ -15,13 +15,13 @@ namespace parse_prs
 {
 literal::literal()
 {
-	debug_name = "literal";
+	debug_name = "prs_literal";
 	invert = false;
 	gate = true;
 }
 
 literal::literal(variable_name name, bool invert, bool gate) {
-	debug_name = "literal";
+	debug_name = "prs_literal";
 	valid = true;
 	this->name = name;
 	this->invert = invert;
@@ -30,7 +30,7 @@ literal::literal(variable_name name, bool invert, bool gate) {
 
 literal::literal(tokenizer &tokens, bool source, void *data)
 {
-	debug_name = "literal";
+	debug_name = "prs_literal";
 	invert = false;
 	gate = true;
 	parse(tokens, source, data);
