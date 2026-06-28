@@ -16,4 +16,10 @@ void register_syntax(tokenizer &tokens) {
 	production_rule_set::register_syntax(tokens);
 }
 
+const parse::factory factory{
+	register_syntax,
+	expect,
+	produce
+};
+
 }
