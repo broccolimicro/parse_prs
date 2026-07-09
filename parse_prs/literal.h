@@ -2,11 +2,9 @@
 
 #include <parse/parse.h>
 #include <parse/syntax.h>
-#include <parse_ucs/variable_name.h>
+#include <parse_prs/variable_name.h>
 
-namespace parse_prs
-{
-using parse_ucs::variable_name;
+namespace parse_prs {
 
 struct literal : parse::syntax {
 	literal();
