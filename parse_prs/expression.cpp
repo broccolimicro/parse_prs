@@ -43,6 +43,8 @@ parse_expression::config makeExprConfig() {
 	cfg.order.push(operation_set::UNARY);
 	cfg.order.push_back("~", "", "", "");
 
+	cfg.set_lvalue();
+
 	cfg.order.push(operation_set::MODIFIER);
 	cfg.order.push_back("", "'", "", "");
 
@@ -53,8 +55,6 @@ parse_expression::config makeExprConfig() {
 	
 	cfg.order.push(operation_set::MODIFIER);
 	cfg.order.push_back("", "::", "", "");
-
-	cfg.lvalueLevel = cfg.order.size()-3;
 
 	return cfg;
 }
@@ -75,7 +75,7 @@ parse_expression::config makeCompConfig() {
 	cfg.order.push(operation_set::BINARY);
 	cfg.order.push_back("", "", ",", "");
 
-	cfg.lvalueLevel = 2;
+	cfg.set_lvalue();
 
 	return cfg;
 }
