@@ -31,7 +31,7 @@ variable_name::variable_name(std::string net) {
 	}
 }
 
-variable_name::variable_name(tokenizer &tokens, void *data)
+variable_name::variable_name(tokenizer &tokens, std::any data)
 {
 	debug_name = "wv_variable_name";
 	parse(tokens, data);
@@ -42,7 +42,7 @@ variable_name::~variable_name()
 
 }
 
-void variable_name::parse(tokenizer &tokens, void *data)
+void variable_name::parse(tokenizer &tokens, std::any data)
 {
 	tokens.syntax_start(this);
 
@@ -55,10 +55,10 @@ void variable_name::parse(tokenizer &tokens, void *data)
 	tokens.increment(true);
 	tokens.expect<member_name>();
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 		names.push_back(member_name(tokens, data));
 
-	while (tokens.decrement(__FILE__, __LINE__, data))
+	while (tokens.decrement(__FILE__, __LINE__))
 	{
 		tokens.next();
 
@@ -68,25 +68,25 @@ void variable_name::parse(tokenizer &tokens, void *data)
 		tokens.increment(true);
 		tokens.expect<member_name>();
 
-		if (tokens.decrement(__FILE__, __LINE__, data))
+		if (tokens.decrement(__FILE__, __LINE__))
 			names.push_back(member_name(tokens, data));
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 	{
 		tokens.next();
 
 		tokens.increment(true);
 		tokens.expect<parse::number>();
 
-		if (tokens.decrement(__FILE__, __LINE__, data))
+		if (tokens.decrement(__FILE__, __LINE__))
 			region = tokens.next();
 	}
 
 	tokens.syntax_end(this);
 }
 
-bool variable_name::is_next(tokenizer &tokens, int i, void *data)
+bool variable_name::is_next(tokenizer &tokens, int i, std::any data)
 {
 	return member_name::is_next(tokens, i, data);
 }

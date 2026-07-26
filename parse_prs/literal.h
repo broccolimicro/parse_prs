@@ -9,15 +9,15 @@ namespace parse_prs {
 struct literal : parse::syntax {
 	literal();
 	literal(variable_name name, bool invert, bool gate=true);
-	literal(tokenizer &tokens, bool source, void *data = NULL);
+	literal(tokenizer &tokens, bool source, std::any data=std::any());
 	~literal();
 
 	variable_name name;
 	bool gate;
 	bool invert;
 
-	void parse(tokenizer &tokens, bool source, void *data = NULL);
-	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
+	void parse(tokenizer &tokens, bool source, std::any data=std::any());
+	static bool is_next(tokenizer &tokens, int i = 1, std::any data=std::any());
 	static void register_syntax(tokenizer &tokens);
 
 	string to_string(string tab = "") const;

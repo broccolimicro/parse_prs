@@ -19,7 +19,7 @@ guard::guard()
 	this->level = OR;
 }
 
-guard::guard(tokenizer &tokens, int level, bool source, void *data)
+guard::guard(tokenizer &tokens, int level, bool source, std::any data)
 {
 	debug_name = "prs_guard";
 	parse(tokens, level, source, data);
@@ -30,7 +30,7 @@ guard::~guard()
 
 }
 
-void guard::parse(tokenizer &tokens, int level, bool source, void *data)
+void guard::parse(tokenizer &tokens, int level, bool source, std::any data)
 {
 	this->level = level;
 	tokens.syntax_start(this);
@@ -52,7 +52,7 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 
 	guard pchg;
 	while (true) {
-		if (tokens.decrement(__FILE__, __LINE__, data)) {
+		if (tokens.decrement(__FILE__, __LINE__)) {
 			bool sizing = false;
 			if (tokens.found("(")) {
 				sizing = true;
@@ -70,22 +70,22 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 				tokens.increment(true);
 				tokens.expect<guard>();
 
-				if (tokens.decrement(__FILE__, __LINE__, data)) {
+				if (tokens.decrement(__FILE__, __LINE__)) {
 					terms.push_back(term(guard(tokens, OR, source, data)));
 				}
 
-				if (tokens.decrement(__FILE__, __LINE__, data)) {
+				if (tokens.decrement(__FILE__, __LINE__)) {
 					tokens.next();
 				}
 
-				if (tokens.decrement(__FILE__, __LINE__, data))
+				if (tokens.decrement(__FILE__, __LINE__))
 				{
 					tokens.next();
 
 					tokens.increment(true);
 					tokens.expect<parse::number>();
 
-					if (tokens.decrement(__FILE__, __LINE__, data))
+					if (tokens.decrement(__FILE__, __LINE__))
 						terms.back().sub.region = tokens.next();
 				}
 				source = false;
@@ -106,7 +106,7 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 			}
 
 			if (sizing) {
-				if (tokens.decrement(__FILE__, __LINE__, data)) {
+				if (tokens.decrement(__FILE__, __LINE__)) {
 					tokens.next();
 
 					tokens.increment(true);
@@ -118,36 +118,36 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 					tokens.increment(true);
 					tokens.expect<parse::number>();
 
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						terms.back().size = tokens.next();
 					}
 
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						tokens.next();
 
 						tokens.increment(true);
 						tokens.expect<parse::instance>();
 
-						if (tokens.decrement(__FILE__, __LINE__, data)) {
+						if (tokens.decrement(__FILE__, __LINE__)) {
 							terms.back().variant = tokens.next();
 						}
 					}
 
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						tokens.next();
 					}
 				}
 			}
 		}
 
-		if (tokens.decrement(__FILE__, __LINE__, data)) {
+		if (tokens.decrement(__FILE__, __LINE__)) {
 			tokens.next();
 
 			if (level == AND) {
 				tokens.increment(false);
 				tokens.expect("{");
 
-				if (tokens.decrement(__FILE__, __LINE__, data)) {
+				if (tokens.decrement(__FILE__, __LINE__)) {
 					tokens.next();
 
 					tokens.increment(true);
@@ -156,11 +156,11 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 					tokens.increment(true);
 					tokens.expect<guard>();
 
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						pchg.parse(tokens, OR, true, data);
 					}
 					
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						tokens.next();
 					}
 				}
@@ -188,7 +188,7 @@ void guard::parse(tokenizer &tokens, int level, bool source, void *data)
 	tokens.syntax_end(this);
 }
 
-bool guard::is_next(tokenizer &tokens, int i, void *data)
+bool guard::is_next(tokenizer &tokens, int i, std::any data)
 {
 	return tokens.is_next("(", i) or literal::is_next(tokens, i, data);
 }

@@ -20,7 +20,7 @@ slice::slice(int lo, int hi) {
 	}
 }
 
-slice::slice(tokenizer &tokens, void *data)
+slice::slice(tokenizer &tokens, std::any data)
 {
 	debug_name = "wv_slice";
 	lower = "";
@@ -33,7 +33,7 @@ slice::~slice()
 
 }
 
-void slice::parse(tokenizer &tokens, void *data)
+void slice::parse(tokenizer &tokens, std::any data)
 {
 	tokens.syntax_start(this);
 
@@ -49,33 +49,33 @@ void slice::parse(tokenizer &tokens, void *data)
 	tokens.increment(true);
 	tokens.expect("[");
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 		tokens.next();
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 	{
 		lower = tokens.next();
 		upper = lower;
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 	{
 		tokens.next();
 
 		tokens.increment(true);
 		tokens.expect<parse::number>();
 
-		if (tokens.decrement(__FILE__, __LINE__, data))
+		if (tokens.decrement(__FILE__, __LINE__))
 			upper = tokens.next();
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 		tokens.next();
 
 	tokens.syntax_end(this);
 }
 
-bool slice::is_next(tokenizer &tokens, int i, void *data)
+bool slice::is_next(tokenizer &tokens, int i, std::any data)
 {
 	return tokens.is_next("[", i);
 }

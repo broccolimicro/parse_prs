@@ -23,7 +23,7 @@ production_rule::production_rule()
 	after = std::numeric_limits<uint64_t>::max();
 }
 
-production_rule::production_rule(tokenizer &tokens, void *data)
+production_rule::production_rule(tokenizer &tokens, std::any data)
 {
 	debug_name = "prs_production_rule";
 	weak = false;
@@ -39,7 +39,7 @@ production_rule::~production_rule()
 
 }
 
-void production_rule::parse(tokenizer &tokens, void *data)
+void production_rule::parse(tokenizer &tokens, std::any data)
 {
 	weak = false;
 	force = false;
@@ -67,19 +67,19 @@ void production_rule::parse(tokenizer &tokens, void *data)
 	tokens.increment(true);
 	tokens.expect<parse_prs::guard>();
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		implicant.parse(tokens, guard::OR, true, data);
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		tokens.next();
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		action.parse(tokens, data);
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		tokens.next();
 
 		tokens.increment(true);
@@ -88,16 +88,16 @@ void production_rule::parse(tokenizer &tokens, void *data)
 		tokens.increment(true);
 		tokens.expect<expression>();
 
-		if (tokens.decrement(__FILE__, __LINE__, data)) {
+		if (tokens.decrement(__FILE__, __LINE__)) {
 			assume.parse(tokens, data);
 		}
 
-		if (tokens.decrement(__FILE__, __LINE__, data)) {
+		if (tokens.decrement(__FILE__, __LINE__)) {
 			tokens.next();
 		}
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		tokens.next();
 
 		tokens.increment(true);
@@ -121,7 +121,7 @@ void production_rule::parse(tokenizer &tokens, void *data)
 			tokens.expect("pass");
 			tokens.expect("after");
 
-			if (tokens.decrement(__FILE__, __LINE__, data)) {
+			if (tokens.decrement(__FILE__, __LINE__)) {
 				string value = tokens.next();
 				if (value == "keep") {
 					keep = true;
@@ -136,36 +136,35 @@ void production_rule::parse(tokenizer &tokens, void *data)
 					tokens.expect<parse::number>();
 					tokens.increment(true);
 					tokens.expect("=");
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						tokens.next();
 					}
-					if (tokens.decrement(__FILE__, __LINE__, data)) {
+					if (tokens.decrement(__FILE__, __LINE__)) {
 						after = stoull(tokens.next());
 					}
 				}
 			}
-		} while (tokens.decrement(__FILE__, __LINE__, data));
+		} while (tokens.decrement(__FILE__, __LINE__));
 
-		if (tokens.decrement(__FILE__, __LINE__, data)) {
+		if (tokens.decrement(__FILE__, __LINE__)) {
 			tokens.next();
 		}
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		tokens.next();
 	}
 
 	tokens.syntax_end(this);
 }
 
-bool production_rule::is_next(tokenizer &tokens, int i, void *data)
+bool production_rule::is_next(tokenizer &tokens, int i, std::any data)
 {
 	return parse_prs::guard::is_next(tokens, i, data);
 }
 
 void production_rule::register_syntax(tokenizer &tokens) {
 	if (!tokens.syntax_registered<production_rule>()) {
-		setup_expressions();
 		tokens.register_syntax<production_rule>();
 		tokens.register_token<parse::symbol>();
 		tokens.register_token<parse::number>();

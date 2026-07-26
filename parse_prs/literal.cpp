@@ -28,7 +28,7 @@ literal::literal(variable_name name, bool invert, bool gate) {
 	this->gate = gate;
 }
 
-literal::literal(tokenizer &tokens, bool source, void *data)
+literal::literal(tokenizer &tokens, bool source, std::any data)
 {
 	debug_name = "prs_literal";
 	invert = false;
@@ -41,7 +41,7 @@ literal::~literal()
 
 }
 
-void literal::parse(tokenizer &tokens, bool source, void *data)
+void literal::parse(tokenizer &tokens, bool source, std::any data)
 {
 	tokens.syntax_start(this);
 	
@@ -56,26 +56,26 @@ void literal::parse(tokenizer &tokens, bool source, void *data)
 	tokens.increment(false);
 	tokens.expect("~");
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		tokens.next();
 
 		invert = true;
 	}
 
-	if (source and tokens.decrement(__FILE__, __LINE__, data)) {
+	if (source and tokens.decrement(__FILE__, __LINE__)) {
 		tokens.next();
 
 		gate = false;
 	}
 
-	if (tokens.decrement(__FILE__, __LINE__, data)) {
+	if (tokens.decrement(__FILE__, __LINE__)) {
 		name = variable_name(tokens, data);
 	}
 
 	tokens.syntax_end(this);
 }
 
-bool literal::is_next(tokenizer &tokens, int i, void *data)
+bool literal::is_next(tokenizer &tokens, int i, std::any data)
 {
 	return tokens.is_next("@", i) or tokens.is_next("~", i) or variable_name::is_next(tokens, i, data);
 }

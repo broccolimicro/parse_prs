@@ -21,7 +21,7 @@ member_name::member_name(std::string field) {
 	}
 }
 
-member_name::member_name(tokenizer &tokens, void *data)
+member_name::member_name(tokenizer &tokens, std::any data)
 {
 	debug_name = "wv_member_name";
 	parse(tokens, data);
@@ -32,7 +32,7 @@ member_name::~member_name()
 
 }
 
-void member_name::parse(tokenizer &tokens, void *data)
+void member_name::parse(tokenizer &tokens, std::any data)
 {
 	tokens.syntax_start(this);
 
@@ -42,10 +42,10 @@ void member_name::parse(tokenizer &tokens, void *data)
 	tokens.increment(true);
 	tokens.expect<parse::instance>();
 
-	if (tokens.decrement(__FILE__, __LINE__, data))
+	if (tokens.decrement(__FILE__, __LINE__))
 		name = tokens.next();
 
-	while (tokens.decrement(__FILE__, __LINE__, data))
+	while (tokens.decrement(__FILE__, __LINE__))
 	{
 		tokens.increment(false);
 		tokens.expect<slice>();
@@ -56,7 +56,7 @@ void member_name::parse(tokenizer &tokens, void *data)
 	tokens.syntax_end(this);
 }
 
-bool member_name::is_next(tokenizer &tokens, int i, void *data)
+bool member_name::is_next(tokenizer &tokens, int i, std::any data)
 {
 	return tokens.is_next<parse::instance>(i);
 }

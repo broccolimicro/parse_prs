@@ -11,7 +11,7 @@ namespace parse_prs
 struct production_rule : parse::syntax
 {
 	production_rule();
-	production_rule(tokenizer &tokens, void *data = NULL);
+	production_rule(tokenizer &tokens, std::any data=std::any());
 	~production_rule();
 
 	expression assume;
@@ -23,8 +23,8 @@ struct production_rule : parse::syntax
 	bool keep;
 	uint64_t after;
 
-	void parse(tokenizer &tokens, void *data = NULL);
-	static bool is_next(tokenizer &tokens, int i = 1, void *data = NULL);
+	void parse(tokenizer &tokens, std::any data=std::any());
+	static bool is_next(tokenizer &tokens, int i = 1, std::any data=std::any());
 	static void register_syntax(tokenizer &tokens);
 
 	string to_string(string tab = "") const;
