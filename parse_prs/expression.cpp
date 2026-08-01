@@ -1,6 +1,5 @@
 #include "expression.h"
 #include <parse_expression/precedence.h>
-#include <parse_expression/literal.h>
 #include <parse/wrapper.h>
 
 namespace parse_prs {
@@ -29,8 +28,8 @@ parse_expression::config makeExprConfig() {
 	using operation_set=parse_expression::operation_set;
 
 	parse_expression::config cfg;
-	int CONSTANT = cfg.push<parse_expression::default_constant>("constant");
-	int LITERAL = cfg.push<parse_expression::default_literal>("literal");
+	int CONSTANT = cfg.push<constant_expression>("constant");
+	int LITERAL = cfg.push<literal_expression>("literal");
 
 	cfg.base = {LITERAL, CONSTANT};
 
