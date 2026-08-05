@@ -1,6 +1,5 @@
 #include "expression.h"
 #include <parse_expression/precedence.h>
-#include <parse/wrapper.h>
 
 namespace parse_prs {
 
@@ -30,6 +29,8 @@ parse_expression::config makeExprConfig() {
 	parse_expression::config cfg;
 	int CONSTANT = cfg.push<constant_expression>("constant");
 	int LITERAL = cfg.push<literal_expression>("literal");
+	int LABEL = cfg.push<label>("label");
+	int IDENT = cfg.push<ident>("ident");
 
 	cfg.base = {LITERAL, CONSTANT};
 
@@ -45,15 +46,15 @@ parse_expression::config makeExprConfig() {
 	cfg.set_lvalue();
 
 	cfg.order.push(operation_set::MODIFIER);
-	cfg.order.push_back("", "'", "", "");
+	cfg.order.push_back("", "'", "", "", {IDENT});
 
 	cfg.order.push(operation_set::MODIFIER);
 	cfg.order.push_back("", "(", ",", ")");
-	cfg.order.push_back("", ".", "", "");
+	cfg.order.push_back("", ".", "", "", {LABEL});
 	cfg.order.push_back("", "[", ":", "]");
 	
 	cfg.order.push(operation_set::MODIFIER);
-	cfg.order.push_back("", "::", "", "");
+	cfg.order.push_back("", "::", "", "", {LABEL});
 
 	return cfg;
 }

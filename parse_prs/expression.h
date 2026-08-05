@@ -4,6 +4,7 @@
 #include <parse_expression/assignment.h>
 #include <parse_expression/wrapper.h>
 #include <parse_expression/literal.h>
+#include <parse/wrapper.h>
 
 namespace parse_prs {
 
@@ -30,6 +31,8 @@ struct composition_config {
 
 using constant_expression = parse_expression::default_constant;
 using literal_expression = parse_expression::default_literal;
+using label = parse::wrapper<parse::instance>;
+using ident = parse::wrapper<parse::number>;
 
 using expression = parse_expression::rvalue<expression_config>;
 using assignment = parse_expression::rvalue<expression_config, parse_expression::assignment>;
